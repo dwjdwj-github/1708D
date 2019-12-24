@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daiwenjie.cms.dao.CommentDAO">
+	
+	<insert id="addComment">
+		INSERT INTO cms_comment(content,blog_id,displayTime,user_id)
+		VALUES(#{content},#{blog.id},#{displayTime},#{author.id})
+	</insert>
+	<resultMap type="Comment" id="commentMap">
+		<id column="id" property="id"/>
+		<result column="content" property="content"/>
+		<result column="displayTime" property="displayTime"/>
+		<association property="author" javaType="User" >
+			<id column="id" property="id"></id>
+			<result column="nickname" property="nickname"/>
+		</association>
+	</resultMap>
+	
+	
+	<select id="commentList" resultMap="commentMap">
+		SELECT cms_comment.*,cms_user.nickname FROM cms_comment LEFT JOIN cms_user ON cms_comment.user_id=cms_user.id
+		WHERE cms_comment.blog_id=#{id}
+	</select>
+</mapper>
